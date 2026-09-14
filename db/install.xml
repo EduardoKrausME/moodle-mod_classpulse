@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/pulse/db" VERSION="2026091200" COMMENT="XMLDB file for mod_pulse"
+<XMLDB PATH="mod/classpulse/db" VERSION="2026091200" COMMENT="XMLDB file for mod_classpulse"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
-    <TABLE NAME="pulse" COMMENT="Pulse activity instances">
+    <TABLE NAME="classpulse" COMMENT="Pulse activity instances">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -23,10 +23,10 @@
         <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="pulse_votes" COMMENT="Current response from each participant">
+    <TABLE NAME="classpulse_votes" COMMENT="Current response from each participant">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="pulseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="classpulseid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="respondenthash" TYPE="char" LENGTH="64" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="response" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
@@ -35,12 +35,12 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="pulse" TYPE="foreign" FIELDS="pulseid" REFTABLE="pulse" REFFIELDS="id"/>
+        <KEY NAME="classpulse" TYPE="foreign" FIELDS="classpulseid" REFTABLE="classpulse" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="pulsehash" UNIQUE="true" FIELDS="pulseid, respondenthash"/>
-        <INDEX NAME="pulseuserid" UNIQUE="false" FIELDS="pulseid, userid"/>
-        <INDEX NAME="pulseresponse" UNIQUE="false" FIELDS="pulseid, response"/>
+        <INDEX NAME="classpulsehash" UNIQUE="true" FIELDS="classpulseid, respondenthash"/>
+        <INDEX NAME="classpulseuserid" UNIQUE="false" FIELDS="classpulseid, userid"/>
+        <INDEX NAME="classpulseresponse" UNIQUE="false" FIELDS="classpulseid, response"/>
       </INDEXES>
     </TABLE>
   </TABLES>

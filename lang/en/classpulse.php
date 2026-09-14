@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * pulse.php
+ * classpulse.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ $string['anonymous'] = 'Anonymous responses';
 $string['anonymous_help'] = 'When enabled, teachers only see aggregated results. The response does not store the userid; Moodle keeps an activity-specific pseudonymous identifier only to prevent duplicate responses. Site administrators with direct database and code access should not treat this as absolute cryptographic anonymity.';
 $string['anonymousmodecannotchange'] = 'Anonymous mode cannot be changed after the activity has received responses.';
 $string['anonymousreportnotice'] = 'Anonymous mode: this report shows aggregated data only.';
-$string['anonymousstudentnotice'] = 'This pulse is anonymous to the teacher.';
+$string['anonymousstudentnotice'] = 'This classpulse is anonymous to the teacher.';
 $string['backtoactivity'] = 'Back to activity';
 $string['cannotvote'] = 'You can view this activity but do not have permission to respond.';
 $string['changeprompt'] = 'You have already responded. Choosing another option and submitting will replace your current response.';
@@ -47,23 +47,23 @@ $string['invalidcharttype'] = 'Invalid chart type.';
 $string['invalidresponse'] = 'Invalid response.';
 $string['livereport'] = 'Live report';
 $string['missinganonsalt'] = 'The anonymous identifier for this activity could not be generated.';
-$string['modulename'] = 'Class pulse';
-$string['modulenameplural'] = 'Class pulses';
-$string['nopulses'] = 'There are no Class pulse activities in this course.';
+$string['modulename'] = 'Class classpulse';
+$string['modulenameplural'] = 'Class classpulses';
+$string['noclasspulses'] = 'There are no Class classpulse activities in this course.';
 $string['openlivereport'] = 'Open live report';
-$string['pluginadministration'] = 'Class pulse administration';
-$string['pluginname'] = 'Class pulse';
-$string['privacy:metadata:pulse_votes'] = 'Stores a participant\'s current Class pulse response.';
-$string['privacy:metadata:pulse_votes:respondenthash'] = 'Activity-specific pseudonymous identifier used to keep one current response per participant.';
-$string['privacy:metadata:pulse_votes:response'] = 'The understanding level selected by the participant.';
-$string['privacy:metadata:pulse_votes:timecreated'] = 'The time when the response was created.';
-$string['privacy:metadata:pulse_votes:timemodified'] = 'The time when the response was last changed.';
-$string['privacy:metadata:pulse_votes:userid'] = 'User ID when the activity is not anonymous; zero when anonymous mode is enabled.';
-$string['pulse:addinstance'] = 'Add a new Class pulse activity';
-$string['pulse:view'] = 'View a Class pulse activity';
-$string['pulse:viewreport'] = 'View the Class pulse aggregate report';
-$string['pulse:vote'] = 'Respond to a Class pulse activity';
-$string['pulsename'] = 'Pulse name';
+$string['pluginadministration'] = 'Class classpulse administration';
+$string['pluginname'] = 'Class classpulse';
+$string['privacy:metadata:classpulse_votes'] = 'Stores a participant\'s current Class classpulse response.';
+$string['privacy:metadata:classpulse_votes:respondenthash'] = 'Activity-specific pseudonymous identifier used to keep one current response per participant.';
+$string['privacy:metadata:classpulse_votes:response'] = 'The understanding level selected by the participant.';
+$string['privacy:metadata:classpulse_votes:timecreated'] = 'The time when the response was created.';
+$string['privacy:metadata:classpulse_votes:timemodified'] = 'The time when the response was last changed.';
+$string['privacy:metadata:classpulse_votes:userid'] = 'User ID when the activity is not anonymous; zero when anonymous mode is enabled.';
+$string['classpulse:addinstance'] = 'Add a new Class classpulse activity';
+$string['classpulse:view'] = 'View a Class classpulse activity';
+$string['classpulse:viewreport'] = 'View the Class classpulse aggregate report';
+$string['classpulse:vote'] = 'Respond to a Class classpulse activity';
+$string['classpulsename'] = 'Pulse name';
 $string['question'] = 'Question';
 $string['response1'] = '😕 I did not understand';
 $string['response1short'] = 'Did not understand';

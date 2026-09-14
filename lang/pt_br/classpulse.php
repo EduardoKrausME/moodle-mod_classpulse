@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * pulse.php
+ * classpulse.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,21 +49,21 @@ $string['livereport'] = 'Relatório em tempo real';
 $string['missinganonsalt'] = 'Não foi possível gerar o identificador anônimo desta atividade.';
 $string['modulename'] = 'Pulso da turma';
 $string['modulenameplural'] = 'Pulsos da turma';
-$string['nopulses'] = 'Não há atividades Pulso da turma neste curso.';
+$string['noclasspulses'] = 'Não há atividades Pulso da turma neste curso.';
 $string['openlivereport'] = 'Abrir relatório em tempo real';
 $string['pluginadministration'] = 'Administração do Pulso da turma';
 $string['pluginname'] = 'Pulso da turma';
-$string['privacy:metadata:pulse_votes'] = 'Armazena a resposta atual de um participante ao Pulso da turma.';
-$string['privacy:metadata:pulse_votes:respondenthash'] = 'Identificador pseudonimizado específico da atividade usado para manter uma resposta atual por participante.';
-$string['privacy:metadata:pulse_votes:response'] = 'Nível de compreensão informado pelo participante.';
-$string['privacy:metadata:pulse_votes:timecreated'] = 'Data e hora em que a resposta foi criada.';
-$string['privacy:metadata:pulse_votes:timemodified'] = 'Data e hora da última alteração da resposta.';
-$string['privacy:metadata:pulse_votes:userid'] = 'ID do usuário quando a atividade não é anônima; zero quando o modo anônimo está ativo.';
-$string['pulse:addinstance'] = 'Adicionar uma nova atividade Pulso da turma';
-$string['pulse:view'] = 'Visualizar uma atividade Pulso da turma';
-$string['pulse:viewreport'] = 'Visualizar o relatório agregado do Pulso da turma';
-$string['pulse:vote'] = 'Responder a uma atividade Pulso da turma';
-$string['pulsename'] = 'Nome do pulso';
+$string['privacy:metadata:classpulse_votes'] = 'Armazena a resposta atual de um participante ao Pulso da turma.';
+$string['privacy:metadata:classpulse_votes:respondenthash'] = 'Identificador pseudonimizado específico da atividade usado para manter uma resposta atual por participante.';
+$string['privacy:metadata:classpulse_votes:response'] = 'Nível de compreensão informado pelo participante.';
+$string['privacy:metadata:classpulse_votes:timecreated'] = 'Data e hora em que a resposta foi criada.';
+$string['privacy:metadata:classpulse_votes:timemodified'] = 'Data e hora da última alteração da resposta.';
+$string['privacy:metadata:classpulse_votes:userid'] = 'ID do usuário quando a atividade não é anônima; zero quando o modo anônimo está ativo.';
+$string['classpulse:addinstance'] = 'Adicionar uma nova atividade Pulso da turma';
+$string['classpulse:view'] = 'Visualizar uma atividade Pulso da turma';
+$string['classpulse:viewreport'] = 'Visualizar o relatório agregado do Pulso da turma';
+$string['classpulse:vote'] = 'Responder a uma atividade Pulso da turma';
+$string['classpulsename'] = 'Nome do pulso';
 $string['question'] = 'Pergunta';
 $string['response1'] = '😕 Não entendi';
 $string['response1short'] = 'Não entendi';

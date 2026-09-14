@@ -17,7 +17,7 @@
 /**
  * report.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,36 +25,36 @@
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
-$cm = get_coursemodule_from_id("pulse", $id, 0, false, MUST_EXIST);
+$cm = get_coursemodule_from_id("classpulse", $id, 0, false, MUST_EXIST);
 $course = get_course($cm->course);
-$pulse = $DB->get_record("pulse", ["id" => $cm->instance], "*", MUST_EXIST);
+$classpulse = $DB->get_record("classpulse", ["id" => $cm->instance], "*", MUST_EXIST);
 
 require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
-require_capability("mod/pulse:viewreport", $context);
+require_capability("mod/classpulse:viewreport", $context);
 
-$PAGE->set_url("/mod/pulse/report.php", ["id" => $cm->id]);
-$PAGE->set_title(get_string("livereport", "mod_pulse"));
+$PAGE->set_url("/mod/classpulse/report.php", ["id" => $cm->id]);
+$PAGE->set_title(get_string("livereport", "mod_classpulse"));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 $PAGE->set_cm($cm, $course);
-$PAGE->set_activity_record($pulse);
-$PAGE->requires->js_call_amd("mod_pulse/dashboard", "init");
+$PAGE->set_activity_record($classpulse);
+$PAGE->requires->js_call_amd("mod_classpulse/dashboard", "init");
 
-$event = \mod_pulse\event\report_viewed::create([
-    "objectid" => $pulse->id,
+$event = \mod_classpulse\event\report_viewed::create([
+    "objectid" => $classpulse->id,
     "context" => $context,
 ]);
 $event->trigger();
 
 $templatecontext = [
     "cmid" => $cm->id,
-    "question" => format_string($pulse->question, true, ["context" => $context]),
-    "defaultchart" => $pulse->charttype,
-    "anonymous" => !empty($pulse->anonymous),
-    "backurl" => (new moodle_url("/mod/pulse/view.php", ["id" => $cm->id]))->out(false),
+    "question" => format_string($classpulse->question, true, ["context" => $context]),
+    "defaultchart" => $classpulse->charttype,
+    "anonymous" => !empty($classpulse->anonymous),
+    "backurl" => (new moodle_url("/mod/classpulse/view.php", ["id" => $cm->id]))->out(false),
 ];
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template("mod_pulse/report", $templatecontext);
+echo $OUTPUT->render_from_template("mod_classpulse/report", $templatecontext);
 echo $OUTPUT->footer();

@@ -17,12 +17,12 @@
 /**
  * manager.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_pulse;
+namespace mod_classpulse;
 
 use context_module;
 use moodle_exception;
@@ -45,7 +45,7 @@ class manager {
     public const RESPONSE_MASTERED = 4;
 
     /**
-     * Add one pulse instance.
+     * Add one classpulse instance.
      *
      * @param stdClass $data
      * @return int
@@ -59,11 +59,11 @@ class manager {
         $data->timemodified = $now;
         $data->anonsalt = bin2hex(random_bytes(32));
 
-        return $DB->insert_record("pulse", $data);
+        return $DB->insert_record("classpulse", $data);
     }
 
     /**
-     * Update one pulse instance.
+     * Update one classpulse instance.
      *
      * @param stdClass $data
      * @return bool
@@ -71,10 +71,10 @@ class manager {
     public static function update_instance(stdClass $data): bool {
         global $DB;
 
-        $current = $DB->get_record("pulse", ["id" => $data->instance], "id, anonymous", MUST_EXIST);
+        $current = $DB->get_record("classpulse", ["id" => $data->instance], "id, anonymous", MUST_EXIST);
         if ((int) $current->anonymous !== (int) $data->anonymous &&
-                $DB->record_exists("pulse_votes", ["pulseid" => $data->instance])) {
-            throw new moodle_exception("anonymousmodecannotchange", "mod_pulse");
+                $DB->record_exists("classpulse_votes", ["classpulseid" => $data->instance])) {
+            throw new moodle_exception("anonymousmodecannotchange", "mod_classpulse");
         }
 
         self::validate_chart_type((string) $data->charttype);
@@ -82,11 +82,11 @@ class manager {
         $data->timemodified = time();
         unset($data->instance);
 
-        return $DB->update_record("pulse", $data);
+        return $DB->update_record("classpulse", $data);
     }
 
     /**
-     * Delete one pulse instance and its votes.
+     * Delete one classpulse instance and its votes.
      *
      * @param int $id
      * @return bool
@@ -94,12 +94,12 @@ class manager {
     public static function delete_instance(int $id): bool {
         global $DB;
 
-        if (!$DB->record_exists("pulse", ["id" => $id])) {
+        if (!$DB->record_exists("classpulse", ["id" => $id])) {
             return false;
         }
 
-        $DB->delete_records("pulse_votes", ["pulseid" => $id]);
-        $DB->delete_records("pulse", ["id" => $id]);
+        $DB->delete_records("classpulse_votes", ["classpulseid" => $id]);
+        $DB->delete_records("classpulse", ["id" => $id]);
 
         return true;
     }
@@ -107,42 +107,42 @@ class manager {
     /**
      * Save or update a participant response.
      *
-     * @param stdClass $pulse
+     * @param stdClass $classpulse
      * @param int $userid
      * @param int $response
      * @return stdClass
      */
-    public static function save_vote(stdClass $pulse, int $userid, int $response): stdClass {
+    public static function save_vote(stdClass $classpulse, int $userid, int $response): stdClass {
         global $DB;
 
         self::validate_response($response);
-        $respondenthash = self::get_respondent_hash($pulse, $userid);
-        $existing = $DB->get_record("pulse_votes", [
-            "pulseid" => $pulse->id,
+        $respondenthash = self::get_respondent_hash($classpulse, $userid);
+        $existing = $DB->get_record("classpulse_votes", [
+            "classpulseid" => $classpulse->id,
             "respondenthash" => $respondenthash,
         ]);
 
-        if ($existing && empty($pulse->allowchange)) {
-            throw new moodle_exception("responsecannotchange", "mod_pulse");
+        if ($existing && empty($classpulse->allowchange)) {
+            throw new moodle_exception("responsecannotchange", "mod_classpulse");
         }
 
         $now = time();
         if ($existing) {
             $existing->response = $response;
             $existing->timemodified = $now;
-            $DB->update_record("pulse_votes", $existing);
+            $DB->update_record("classpulse_votes", $existing);
             return $existing;
         }
 
         $vote = (object) [
-            "pulseid" => $pulse->id,
-            "userid" => empty($pulse->anonymous) ? $userid : 0,
+            "classpulseid" => $classpulse->id,
+            "userid" => empty($classpulse->anonymous) ? $userid : 0,
             "respondenthash" => $respondenthash,
             "response" => $response,
             "timecreated" => $now,
             "timemodified" => $now,
         ];
-        $vote->id = $DB->insert_record("pulse_votes", $vote);
+        $vote->id = $DB->insert_record("classpulse_votes", $vote);
 
         return $vote;
     }
@@ -150,16 +150,16 @@ class manager {
     /**
      * Get the current response for one participant.
      *
-     * @param stdClass $pulse
+     * @param stdClass $classpulse
      * @param int $userid
      * @return int|null
      */
-    public static function get_user_response(stdClass $pulse, int $userid): ?int {
+    public static function get_user_response(stdClass $classpulse, int $userid): ?int {
         global $DB;
 
-        $respondenthash = self::get_respondent_hash($pulse, $userid);
-        $response = $DB->get_field("pulse_votes", "response", [
-            "pulseid" => $pulse->id,
+        $respondenthash = self::get_respondent_hash($classpulse, $userid);
+        $response = $DB->get_field("classpulse_votes", "response", [
+            "classpulseid" => $classpulse->id,
             "respondenthash" => $respondenthash,
         ]);
 
@@ -169,18 +169,18 @@ class manager {
     /**
      * Get aggregated response data.
      *
-     * @param int $pulseid
+     * @param int $classpulseid
      * @return array
      */
-    public static function get_distribution(int $pulseid): array {
+    public static function get_distribution(int $classpulseid): array {
         global $DB;
 
         $counts = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
         $sql = "SELECT response, COUNT(1) AS total
-                  FROM {pulse_votes}
-                 WHERE pulseid = :pulseid
+                  FROM {classpulse_votes}
+                 WHERE classpulseid = :classpulseid
               GROUP BY response";
-        foreach ($DB->get_records_sql($sql, ["pulseid" => $pulseid]) as $record) {
+        foreach ($DB->get_records_sql($sql, ["classpulseid" => $classpulseid]) as $record) {
             if (array_key_exists((int) $record->response, $counts)) {
                 $counts[(int) $record->response] = (int) $record->total;
             }
@@ -226,11 +226,11 @@ class manager {
      */
     public static function get_response_label(int $response): string {
         return match ($response) {
-            self::RESPONSE_DID_NOT_UNDERSTAND => get_string("response1", "mod_pulse"),
-            self::RESPONSE_PARTIAL => get_string("response2", "mod_pulse"),
-            self::RESPONSE_UNDERSTOOD => get_string("response3", "mod_pulse"),
-            self::RESPONSE_MASTERED => get_string("response4", "mod_pulse"),
-            default => throw new moodle_exception("invalidresponse", "mod_pulse"),
+            self::RESPONSE_DID_NOT_UNDERSTAND => get_string("response1", "mod_classpulse"),
+            self::RESPONSE_PARTIAL => get_string("response2", "mod_classpulse"),
+            self::RESPONSE_UNDERSTOOD => get_string("response3", "mod_classpulse"),
+            self::RESPONSE_MASTERED => get_string("response4", "mod_classpulse"),
+            default => throw new moodle_exception("invalidresponse", "mod_classpulse"),
         };
     }
 
@@ -242,11 +242,11 @@ class manager {
      */
     public static function get_response_short_label(int $response): string {
         return match ($response) {
-            self::RESPONSE_DID_NOT_UNDERSTAND => get_string("response1short", "mod_pulse"),
-            self::RESPONSE_PARTIAL => get_string("response2short", "mod_pulse"),
-            self::RESPONSE_UNDERSTOOD => get_string("response3short", "mod_pulse"),
-            self::RESPONSE_MASTERED => get_string("response4short", "mod_pulse"),
-            default => throw new moodle_exception("invalidresponse", "mod_pulse"),
+            self::RESPONSE_DID_NOT_UNDERSTAND => get_string("response1short", "mod_classpulse"),
+            self::RESPONSE_PARTIAL => get_string("response2short", "mod_classpulse"),
+            self::RESPONSE_UNDERSTOOD => get_string("response3short", "mod_classpulse"),
+            self::RESPONSE_MASTERED => get_string("response4short", "mod_classpulse"),
+            default => throw new moodle_exception("invalidresponse", "mod_classpulse"),
         };
     }
 
@@ -257,7 +257,7 @@ class manager {
      */
     private static function validate_chart_type(string $charttype): void {
         if (!in_array($charttype, ["pie", "bar", "line"], true)) {
-            throw new moodle_exception("invalidcharttype", "mod_pulse");
+            throw new moodle_exception("invalidcharttype", "mod_classpulse");
         }
     }
 
@@ -268,7 +268,7 @@ class manager {
      */
     private static function validate_response(int $response): void {
         if (!in_array($response, self::get_responses(), true)) {
-            throw new moodle_exception("invalidresponse", "mod_pulse");
+            throw new moodle_exception("invalidresponse", "mod_classpulse");
         }
     }
 
@@ -278,15 +278,15 @@ class manager {
      * The report never receives this value. It exists only to enforce one current
      * response per authenticated participant without retaining userid in anonymous mode.
      *
-     * @param stdClass $pulse
+     * @param stdClass $classpulse
      * @param int $userid
      * @return string
      */
-    private static function get_respondent_hash(stdClass $pulse, int $userid): string {
-        if (empty($pulse->anonsalt)) {
-            throw new moodle_exception("missinganonsalt", "mod_pulse");
+    private static function get_respondent_hash(stdClass $classpulse, int $userid): string {
+        if (empty($classpulse->anonsalt)) {
+            throw new moodle_exception("missinganonsalt", "mod_classpulse");
         }
 
-        return hash_hmac("sha256", (string) $userid, $pulse->anonsalt);
+        return hash_hmac("sha256", (string) $userid, $classpulse->anonsalt);
     }
 }

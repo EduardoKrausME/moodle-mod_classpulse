@@ -17,7 +17,7 @@
 /**
  * version.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version = 2026091200;
 $plugin->release = "0.9.0";
-$plugin->component = "mod_pulse";
+$plugin->component = "mod_classpulse";
 $plugin->requires = 2024100700;
 $plugin->maturity = MATURITY_STABLE;

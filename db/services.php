@@ -17,7 +17,7 @@
 /**
  * services.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,11 +25,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-    "mod_pulse_get_results" => [
-        "classname" => "mod_pulse\\external\\get_results",
-        "description" => "Get the aggregated pulse distribution.",
+    "mod_classpulse_get_results" => [
+        "classname" => "mod_classpulse\\external\\get_results",
+        "description" => "Get the aggregated classpulse distribution.",
         "type" => "read",
         "ajax" => true,
-        "capabilities" => "mod/pulse:viewreport",
+        "capabilities" => "mod/classpulse:viewreport",
     ],
 ];

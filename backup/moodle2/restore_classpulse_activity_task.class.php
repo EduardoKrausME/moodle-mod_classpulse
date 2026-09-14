@@ -15,21 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * restore_pulse_activity_task.class.php
+ * restore_classpulse_activity_task.class.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once(__DIR__ . "/restore_pulse_stepslib.php");
+require_once(__DIR__ . "/restore_classpulse_stepslib.php");
 
 /**
- * Class restore_pulse_activity_task.
+ * Class restore_classpulse_activity_task.
  */
-class restore_pulse_activity_task extends restore_activity_task {
+class restore_classpulse_activity_task extends restore_activity_task {
     /**
      * Method define_my_settings.
      *
@@ -44,7 +44,7 @@ class restore_pulse_activity_task extends restore_activity_task {
      * @return void Return value.
      */
     protected function define_my_steps(): void {
-        $this->add_step(new restore_pulse_activity_structure_step("pulse_structure", "pulse.xml"));
+        $this->add_step(new restore_classpulse_activity_structure_step("classpulse_structure", "classpulse.xml"));
     }
 
     /**

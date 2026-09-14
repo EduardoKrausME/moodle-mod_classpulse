@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * restore_pulse_stepslib.php
+ * restore_classpulse_stepslib.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_pulse_activity_structure_step extends restore_activity_structure_step {
+class restore_classpulse_activity_structure_step extends restore_activity_structure_step {
     /**
      * Method define_structure.
      *
@@ -29,49 +29,49 @@ class restore_pulse_activity_structure_step extends restore_activity_structure_s
      */
     protected function define_structure() {
         $paths = [];
-        $paths[] = new restore_path_element("pulse", "/activity/pulse");
+        $paths[] = new restore_path_element("classpulse", "/activity/classpulse");
         if ($this->get_setting_value("userinfo")) {
-            $paths[] = new restore_path_element("pulse_vote", "/activity/pulse/votes/vote");
+            $paths[] = new restore_path_element("classpulse_vote", "/activity/classpulse/votes/vote");
         }
         return $this->prepare_activity_structure($paths);
     }
 
     /**
-     * Method process_pulse.
+     * Method process_classpulse.
      *
      * @param mixed $data Parameter data.
      * @return void Return value.
      */
-    protected function process_pulse($data): void {
+    protected function process_classpulse($data): void {
         global $DB;
 
         $data = (object) $data;
         $data->course = $this->get_courseid();
         $data->anonsalt = bin2hex(random_bytes(32));
-        $newitemid = $DB->insert_record("pulse", $data);
+        $newitemid = $DB->insert_record("classpulse", $data);
         $this->apply_activity_instance($newitemid);
     }
 
     /**
-     * Method process_pulse_vote.
+     * Method process_classpulse_vote.
      *
      * @param mixed $data Parameter data.
      * @return void Return value.
      */
-    protected function process_pulse_vote($data): void {
+    protected function process_classpulse_vote($data): void {
         global $DB;
 
         $data = (object) $data;
-        $data->pulseid = $this->get_new_parentid("pulse");
+        $data->classpulseid = $this->get_new_parentid("classpulse");
         $olduserid = (int) $data->userid;
         $data->userid = $this->get_mappingid("user", $olduserid);
         if (empty($data->userid)) {
             return;
         }
-        $pulse = $DB->get_record("pulse", ["id" => $data->pulseid], "id, anonsalt", MUST_EXIST);
-        $data->respondenthash = hash_hmac("sha256", (string) $data->userid, $pulse->anonsalt);
-        $newitemid = $DB->insert_record("pulse_votes", $data);
-        $this->set_mapping("pulse_vote", $data->id, $newitemid);
+        $classpulse = $DB->get_record("classpulse", ["id" => $data->classpulseid], "id, anonsalt", MUST_EXIST);
+        $data->respondenthash = hash_hmac("sha256", (string) $data->userid, $classpulse->anonsalt);
+        $newitemid = $DB->insert_record("classpulse_votes", $data);
+        $this->set_mapping("classpulse_vote", $data->id, $newitemid);
     }
 
     /**
@@ -80,6 +80,6 @@ class restore_pulse_activity_structure_step extends restore_activity_structure_s
      * @return void Return value.
      */
     protected function after_execute(): void {
-        $this->add_related_files("mod_pulse", "intro", null);
+        $this->add_related_files("mod_classpulse", "intro", null);
     }
 }

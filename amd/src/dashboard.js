@@ -16,7 +16,7 @@
 /**
  * dashboard.js
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,9 +35,9 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
     const renderLegend = function(root, items) {
         const legend = root.find('[data-region="legend"]');
         const html = items.map(function(item, index) {
-            return '<div class="mod-pulse-legend-item">' +
-                '<span class="mod-pulse-swatch" style="background:' + COLORS[index] + '"></span>' +
-                '<span class="mod-pulse-legend-label">' + escapeHtml(item.label) + '</span>' +
+            return '<div class="mod-classpulse-legend-item">' +
+                '<span class="mod-classpulse-swatch" style="background:' + COLORS[index] + '"></span>' +
+                '<span class="mod-classpulse-legend-label">' + escapeHtml(item.label) + '</span>' +
                 '<strong>' + item.count + '</strong>' +
                 '<span class="text-muted">(' + item.percentage.toFixed(1) + '%)</span>' +
                 '</div>';
@@ -47,12 +47,12 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
 
     const renderBar = function(root, items) {
         const max = Math.max.apply(null, items.map(function(item) { return item.count; }).concat([1]));
-        const html = '<div class="mod-pulse-bars">' + items.map(function(item, index) {
+        const html = '<div class="mod-classpulse-bars">' + items.map(function(item, index) {
             const height = Math.max((item.count / max) * 100, item.count > 0 ? 4 : 0);
-            return '<div class="mod-pulse-bar-column">' +
-                '<div class="mod-pulse-bar-value">' + item.count + '</div>' +
-                '<div class="mod-pulse-bar-track"><div class="mod-pulse-bar" style="height:' + height + '%;background:' + COLORS[index] + '"></div></div>' +
-                '<div class="mod-pulse-axis-label">' + escapeHtml(item.shortlabel) + '</div>' +
+            return '<div class="mod-classpulse-bar-column">' +
+                '<div class="mod-classpulse-bar-value">' + item.count + '</div>' +
+                '<div class="mod-classpulse-bar-track"><div class="mod-classpulse-bar" style="height:' + height + '%;background:' + COLORS[index] + '"></div></div>' +
+                '<div class="mod-classpulse-axis-label">' + escapeHtml(item.shortlabel) + '</div>' +
                 '</div>';
         }).join("") + '</div>';
         root.find('[data-region="chart"]').html(html);
@@ -61,7 +61,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
     const renderPie = function(root, items, total) {
         const chart = root.find('[data-region="chart"]');
         if (total === 0) {
-            chart.html('<div class="mod-pulse-empty">0</div>');
+            chart.html('<div class="mod-classpulse-empty">0</div>');
             return;
         }
 
@@ -89,10 +89,10 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
             return '<path d="' + path + '" fill="' + COLORS[index] + '"></path>';
         }).join("");
 
-        chart.html('<div class="mod-pulse-pie-wrap"><svg class="mod-pulse-pie" viewBox="0 0 240 240" role="img" aria-label="' + total + '">' + paths +
-            '<circle cx="120" cy="120" r="52" class="mod-pulse-pie-hole"></circle>' +
-            '<text x="120" y="116" text-anchor="middle" class="mod-pulse-pie-total">' + total + '</text>' +
-            '<text x="120" y="140" text-anchor="middle" class="mod-pulse-pie-caption">' + escapeHtml(latestData.responseslabel) + '</text>' +
+        chart.html('<div class="mod-classpulse-pie-wrap"><svg class="mod-classpulse-pie" viewBox="0 0 240 240" role="img" aria-label="' + total + '">' + paths +
+            '<circle cx="120" cy="120" r="52" class="mod-classpulse-pie-hole"></circle>' +
+            '<text x="120" y="116" text-anchor="middle" class="mod-classpulse-pie-total">' + total + '</text>' +
+            '<text x="120" y="140" text-anchor="middle" class="mod-classpulse-pie-caption">' + escapeHtml(latestData.responseslabel) + '</text>' +
             '</svg></div>');
     };
 
@@ -112,12 +112,12 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         const polyline = points.map(function(point) { return point.x + ',' + point.y; }).join(' ');
         const circles = points.map(function(point) {
             return '<circle cx="' + point.x + '" cy="' + point.y + '" r="6" fill="' + COLORS[point.index] + '"></circle>' +
-                '<text x="' + point.x + '" y="' + (point.y - 12) + '" text-anchor="middle" class="mod-pulse-line-value">' + point.item.count + '</text>' +
-                '<text x="' + point.x + '" y="' + (height - 12) + '" text-anchor="middle" class="mod-pulse-line-label">' + escapeHtml(point.item.shortlabel) + '</text>';
+                '<text x="' + point.x + '" y="' + (point.y - 12) + '" text-anchor="middle" class="mod-classpulse-line-value">' + point.item.count + '</text>' +
+                '<text x="' + point.x + '" y="' + (height - 12) + '" text-anchor="middle" class="mod-classpulse-line-label">' + escapeHtml(point.item.shortlabel) + '</text>';
         }).join("");
-        const svg = '<svg class="mod-pulse-line" viewBox="0 0 ' + width + ' ' + height + '" role="img">' +
-            '<line x1="' + paddingX + '" y1="' + (paddingY + usableHeight) + '" x2="' + (width - paddingX) + '" y2="' + (paddingY + usableHeight) + '" class="mod-pulse-grid"></line>' +
-            '<polyline points="' + polyline + '" class="mod-pulse-line-path"></polyline>' + circles + '</svg>';
+        const svg = '<svg class="mod-classpulse-line" viewBox="0 0 ' + width + ' ' + height + '" role="img">' +
+            '<line x1="' + paddingX + '" y1="' + (paddingY + usableHeight) + '" x2="' + (width - paddingX) + '" y2="' + (paddingY + usableHeight) + '" class="mod-classpulse-grid"></line>' +
+            '<polyline points="' + polyline + '" class="mod-classpulse-line-path"></polyline>' + circles + '</svg>';
         root.find('[data-region="chart"]').html(svg);
     };
 
@@ -141,7 +141,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
     const load = function(root) {
         const cmid = parseInt(root.data("cmid"), 10);
         Ajax.call([{
-            methodname: "mod_pulse_get_results",
+            methodname: "mod_classpulse_get_results",
             args: {cmid: cmid},
         }])[0].done(function(data) {
             latestData = data;
@@ -150,7 +150,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
     };
 
     const init = function() {
-        const root = $('[data-region="pulse-dashboard"]');
+        const root = $('[data-region="classpulse-dashboard"]');
         if (!root.length) {
             return;
         }

@@ -17,12 +17,12 @@
 /**
  * report_viewed.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_pulse\event;
+namespace mod_classpulse\event;
 
 /**
  * Class report_viewed.
@@ -36,7 +36,7 @@ class report_viewed extends \core\event\base {
     protected function init(): void {
         $this->data["crud"] = "r";
         $this->data["edulevel"] = self::LEVEL_TEACHING;
-        $this->data["objecttable"] = "pulse";
+        $this->data["objecttable"] = "classpulse";
     }
 
     /**
@@ -45,7 +45,7 @@ class report_viewed extends \core\event\base {
      * @return string Return value.
      */
     public static function get_name(): string {
-        return get_string("eventreportviewed", "mod_pulse");
+        return get_string("eventreportviewed", "mod_classpulse");
     }
 
     /**
@@ -54,7 +54,7 @@ class report_viewed extends \core\event\base {
      * @return string Return value.
      */
     public function get_description(): string {
-        return "The user with id '{$this->userid}' viewed the live report for pulse activity " .
+        return "The user with id '{$this->userid}' viewed the live report for classpulse activity " .
             "with id '{$this->objectid}'.";
     }
 
@@ -64,7 +64,7 @@ class report_viewed extends \core\event\base {
      * @return \moodle_url Return value.
      */
     public function get_url(): \moodle_url {
-        return new \moodle_url("/mod/pulse/report.php", ["id" => $this->contextinstanceid]);
+        return new \moodle_url("/mod/classpulse/report.php", ["id" => $this->contextinstanceid]);
     }
 
     /**
@@ -73,6 +73,6 @@ class report_viewed extends \core\event\base {
      * @return mixed Return value.
      */
     public static function get_objectid_mapping() {
-        return ["db" => "pulse", "restore" => "pulse"];
+        return ["db" => "classpulse", "restore" => "classpulse"];
     }
 }

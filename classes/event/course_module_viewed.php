@@ -17,12 +17,12 @@
 /**
  * course_module_viewed.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_pulse\event;
+namespace mod_classpulse\event;
 
 /**
  * Class course_module_viewed.
@@ -34,7 +34,7 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return void Return value.
      */
     protected function init(): void {
-        $this->data["objecttable"] = "pulse";
+        $this->data["objecttable"] = "classpulse";
         parent::init();
     }
 
@@ -44,6 +44,6 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return mixed Return value.
      */
     public static function get_objectid_mapping() {
-        return ["db" => "pulse", "restore" => "pulse"];
+        return ["db" => "classpulse", "restore" => "classpulse"];
     }
 }

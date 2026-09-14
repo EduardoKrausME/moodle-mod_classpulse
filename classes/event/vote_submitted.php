@@ -17,12 +17,12 @@
 /**
  * vote_submitted.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_pulse\event;
+namespace mod_classpulse\event;
 
 /**
  * Class vote_submitted.
@@ -36,7 +36,7 @@ class vote_submitted extends \core\event\base {
     protected function init(): void {
         $this->data["crud"] = "c";
         $this->data["edulevel"] = self::LEVEL_PARTICIPATING;
-        $this->data["objecttable"] = "pulse_votes";
+        $this->data["objecttable"] = "classpulse_votes";
     }
 
     /**
@@ -45,7 +45,7 @@ class vote_submitted extends \core\event\base {
      * @return string Return value.
      */
     public static function get_name(): string {
-        return get_string("eventvotesubmitted", "mod_pulse");
+        return get_string("eventvotesubmitted", "mod_classpulse");
     }
 
     /**
@@ -54,7 +54,7 @@ class vote_submitted extends \core\event\base {
      * @return string Return value.
      */
     public function get_description(): string {
-        return "The user with id '{$this->userid}' submitted a response to pulse activity " .
+        return "The user with id '{$this->userid}' submitted a response to classpulse activity " .
             "with course module id '{$this->contextinstanceid}'.";
     }
 
@@ -64,7 +64,7 @@ class vote_submitted extends \core\event\base {
      * @return \moodle_url Return value.
      */
     public function get_url(): \moodle_url {
-        return new \moodle_url("/mod/pulse/view.php", ["id" => $this->contextinstanceid]);
+        return new \moodle_url("/mod/classpulse/view.php", ["id" => $this->contextinstanceid]);
     }
 
     /**
@@ -73,6 +73,6 @@ class vote_submitted extends \core\event\base {
      * @return mixed Return value.
      */
     public static function get_objectid_mapping() {
-        return ["db" => "pulse_votes", "restore" => "pulse_vote"];
+        return ["db" => "classpulse_votes", "restore" => "classpulse_vote"];
     }
 }

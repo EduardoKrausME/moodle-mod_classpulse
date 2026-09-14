@@ -15,62 +15,62 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_pulse/view
+    @template mod_classpulse/view
 
     Example context (json):
     {
         Aqui tem que criar o context em inglês
     }
 }}
-<div class="mod-pulse" data-region="pulse-view">
+<div class="mod-classpulse" data-region="classpulse-view">
     {{#hasintro}}
-        <div class="mod-pulse-intro mb-4">{{{intro}}}</div>
+        <div class="mod-classpulse-intro mb-4">{{{intro}}}</div>
     {{/hasintro}}
 
-    <div class="mod-pulse-card">
-        <h2 class="mod-pulse-question">{{question}}</h2>
+    <div class="mod-classpulse-card">
+        <h2 class="mod-classpulse-question">{{question}}</h2>
 
         {{#anonymous}}
-            <div class="alert alert-info py-2" role="note">{{#str}}anonymousstudentnotice, mod_pulse{{/str}}</div>
+            <div class="alert alert-info py-2" role="note">{{#str}}anonymousstudentnotice, mod_classpulse{{/str}}</div>
         {{/anonymous}}
 
         {{#canvote}}
-            <form method="post" action="{{formurl}}" class="mod-pulse-form">
+            <form method="post" action="{{formurl}}" class="mod-classpulse-form">
                 <input type="hidden" name="sesskey" value="{{sesskey}}">
-                <input type="hidden" name="submitpulse" value="1">
+                <input type="hidden" name="submitclasspulse" value="1">
 
-                <div class="mod-pulse-options" role="radiogroup" aria-label="{{question}}">
+                <div class="mod-classpulse-options" role="radiogroup" aria-label="{{question}}">
                     {{#options}}
-                        <label class="mod-pulse-option {{#selected}}is-selected{{/selected}} {{#locked}}is-locked{{/locked}}">
+                        <label class="mod-classpulse-option {{#selected}}is-selected{{/selected}} {{#locked}}is-locked{{/locked}}">
                             <input type="radio" name="response" value="{{value}}" {{#selected}}checked{{/selected}} {{#locked}}disabled{{/locked}} required>
-                            <span class="mod-pulse-option-label">{{label}}</span>
+                            <span class="mod-classpulse-option-label">{{label}}</span>
                         </label>
                     {{/options}}
                 </div>
 
                 {{#hasresponse}}
                     {{#allowchange}}
-                        <p class="text-muted mt-3 mb-0">{{#str}}changeprompt, mod_pulse{{/str}}</p>
+                        <p class="text-muted mt-3 mb-0">{{#str}}changeprompt, mod_classpulse{{/str}}</p>
                     {{/allowchange}}
                     {{#locked}}
-                        <p class="text-muted mt-3 mb-0">{{#str}}responselocked, mod_pulse{{/str}}</p>
+                        <p class="text-muted mt-3 mb-0">{{#str}}responselocked, mod_classpulse{{/str}}</p>
                     {{/locked}}
                 {{/hasresponse}}
 
                 {{^locked}}
-                    <button type="submit" class="btn btn-primary mt-3">{{#str}}sendresponse, mod_pulse{{/str}}</button>
+                    <button type="submit" class="btn btn-primary mt-3">{{#str}}sendresponse, mod_classpulse{{/str}}</button>
                 {{/locked}}
             </form>
         {{/canvote}}
 
         {{^canvote}}
-            <div class="alert alert-secondary mb-0">{{#str}}cannotvote, mod_pulse{{/str}}</div>
+            <div class="alert alert-secondary mb-0">{{#str}}cannotvote, mod_classpulse{{/str}}</div>
         {{/canvote}}
     </div>
 
     {{#canreport}}
         <div class="mt-3">
-            <a class="btn btn-secondary" href="{{reporturl}}">{{#str}}openlivereport, mod_pulse{{/str}}</a>
+            <a class="btn btn-secondary" href="{{reporturl}}">{{#str}}openlivereport, mod_classpulse{{/str}}</a>
         </div>
     {{/canreport}}
 </div>

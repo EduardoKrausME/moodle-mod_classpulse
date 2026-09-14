@@ -17,19 +17,19 @@
 /**
  * get_results.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace mod_pulse\external;
+namespace mod_classpulse\external;
 
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_multiple_structure;
 use core_external\external_single_structure;
 use core_external\external_value;
-use mod_pulse\manager;
+use mod_classpulse\manager;
 
 /**
  * Class get_results.
@@ -56,22 +56,22 @@ class get_results extends external_api {
         global $DB;
 
         ["cmid" => $cmid] = self::validate_parameters(self::execute_parameters(), ["cmid" => $cmid]);
-        $cm = get_coursemodule_from_id("pulse", $cmid, 0, false, MUST_EXIST);
+        $cm = get_coursemodule_from_id("classpulse", $cmid, 0, false, MUST_EXIST);
         $context = \context_module::instance($cm->id);
         self::validate_context($context);
-        require_capability("mod/pulse:viewreport", $context);
+        require_capability("mod/classpulse:viewreport", $context);
 
-        $pulse = $DB->get_record("pulse", ["id" => $cm->instance], "*", MUST_EXIST);
-        $distribution = manager::get_distribution($pulse->id);
+        $classpulse = $DB->get_record("classpulse", ["id" => $cm->instance], "*", MUST_EXIST);
+        $distribution = manager::get_distribution($classpulse->id);
 
         return [
-            "question" => format_string($pulse->question, true, ["context" => $context]),
-            "charttype" => $pulse->charttype,
-            "anonymous" => !empty($pulse->anonymous),
+            "question" => format_string($classpulse->question, true, ["context" => $context]),
+            "charttype" => $classpulse->charttype,
+            "anonymous" => !empty($classpulse->anonymous),
             "total" => $distribution["total"],
             "items" => $distribution["items"],
             "updated" => userdate(time(), get_string("strftimetime24", "langconfig")),
-            "responseslabel" => get_string("responses", "mod_pulse"),
+            "responseslabel" => get_string("responses", "mod_classpulse"),
         ];
     }
 

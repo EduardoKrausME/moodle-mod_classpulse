@@ -17,7 +17,7 @@
 /**
  * lib.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,7 @@
  * @param string $feature
  * @return mixed
  */
-function pulse_supports($feature) {
+function classpulse_supports($feature) {
     return match ($feature) {
         FEATURE_MOD_INTRO => true,
         FEATURE_SHOW_DESCRIPTION => true,
@@ -43,22 +43,22 @@ function pulse_supports($feature) {
  * Create an activity instance.
  *
  * @param stdClass $data
- * @param mod_pulse_mod_form|null $mform
+ * @param mod_classpulse_mod_form|null $mform
  * @return int
  */
-function pulse_add_instance($data, $mform = null): int {
-    return \mod_pulse\manager::add_instance($data);
+function classpulse_add_instance($data, $mform = null): int {
+    return \mod_classpulse\manager::add_instance($data);
 }
 
 /**
  * Update an activity instance.
  *
  * @param stdClass $data
- * @param mod_pulse_mod_form|null $mform
+ * @param mod_classpulse_mod_form|null $mform
  * @return bool
  */
-function pulse_update_instance($data, $mform = null): bool {
-    return \mod_pulse\manager::update_instance($data);
+function classpulse_update_instance($data, $mform = null): bool {
+    return \mod_classpulse\manager::update_instance($data);
 }
 
 /**
@@ -67,6 +67,6 @@ function pulse_update_instance($data, $mform = null): bool {
  * @param int $id
  * @return bool
  */
-function pulse_delete_instance($id): bool {
-    return \mod_pulse\manager::delete_instance($id);
+function classpulse_delete_instance($id): bool {
+    return \mod_classpulse\manager::delete_instance($id);
 }

@@ -17,7 +17,7 @@
 /**
  * index.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,24 +28,24 @@ $id = required_param("id", PARAM_INT);
 $course = get_course($id);
 require_course_login($course);
 
-$PAGE->set_url("/mod/pulse/index.php", ["id" => $course->id]);
-$PAGE->set_title(get_string("modulenameplural", "mod_pulse"));
+$PAGE->set_url("/mod/classpulse/index.php", ["id" => $course->id]);
+$PAGE->set_title(get_string("modulenameplural", "mod_classpulse"));
 $PAGE->set_heading(format_string($course->fullname));
 
-$instances = get_all_instances_in_course("pulse", $course);
+$instances = get_all_instances_in_course("classpulse", $course);
 
 $table = new html_table();
-$table->head = [get_string("name"), get_string("question", "mod_pulse")];
+$table->head = [get_string("name"), get_string("question", "mod_classpulse")];
 foreach ($instances as $instance) {
-    $url = new moodle_url("/mod/pulse/view.php", ["id" => $instance->coursemodule]);
+    $url = new moodle_url("/mod/classpulse/view.php", ["id" => $instance->coursemodule]);
     $table->data[] = [html_writer::link($url, format_string($instance->name)), format_string($instance->question)];
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string("modulenameplural", "mod_pulse"));
+echo $OUTPUT->heading(get_string("modulenameplural", "mod_classpulse"));
 if ($instances) {
     echo html_writer::table($table);
 } else {
-    echo $OUTPUT->notification(get_string("nopulses", "mod_pulse"), "info");
+    echo $OUTPUT->notification(get_string("noclasspulses", "mod_classpulse"), "info");
 }
 echo $OUTPUT->footer();

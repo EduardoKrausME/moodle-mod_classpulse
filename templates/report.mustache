@@ -15,36 +15,36 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_pulse/report
+    @template mod_classpulse/report
 
     Example context (json):
     {
         Aqui tem que criar o context em inglês
     }
 }}
-<div class="mod-pulse-report" data-region="pulse-dashboard" data-cmid="{{cmid}}" data-default-chart="{{defaultchart}}">
+<div class="mod-classpulse-report" data-region="classpulse-dashboard" data-cmid="{{cmid}}" data-default-chart="{{defaultchart}}">
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
         <div>
             <h2 class="mb-1">{{question}}</h2>
             <div class="text-muted">
-                {{#anonymous}}{{#str}}anonymousreportnotice, mod_pulse{{/str}}{{/anonymous}}
-                {{^anonymous}}{{#str}}identifiedreportnotice, mod_pulse{{/str}}{{/anonymous}}
+                {{#anonymous}}{{#str}}anonymousreportnotice, mod_classpulse{{/str}}{{/anonymous}}
+                {{^anonymous}}{{#str}}identifiedreportnotice, mod_classpulse{{/str}}{{/anonymous}}
             </div>
         </div>
-        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}backtoactivity, mod_pulse{{/str}}</a>
+        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}backtoactivity, mod_classpulse{{/str}}</a>
     </div>
 
-    <div class="mod-pulse-toolbar mb-3" role="group" aria-label="{{#str}}charttype, mod_pulse{{/str}}">
-        <button type="button" class="btn btn-outline-secondary" data-chart="pie">{{#str}}chartpie, mod_pulse{{/str}}</button>
-        <button type="button" class="btn btn-outline-secondary" data-chart="bar">{{#str}}chartbar, mod_pulse{{/str}}</button>
-        <button type="button" class="btn btn-outline-secondary" data-chart="line">{{#str}}chartline, mod_pulse{{/str}}</button>
+    <div class="mod-classpulse-toolbar mb-3" role="group" aria-label="{{#str}}charttype, mod_classpulse{{/str}}">
+        <button type="button" class="btn btn-outline-secondary" data-chart="pie">{{#str}}chartpie, mod_classpulse{{/str}}</button>
+        <button type="button" class="btn btn-outline-secondary" data-chart="bar">{{#str}}chartbar, mod_classpulse{{/str}}</button>
+        <button type="button" class="btn btn-outline-secondary" data-chart="line">{{#str}}chartline, mod_classpulse{{/str}}</button>
     </div>
 
-    <div class="mod-pulse-summary mb-3">
-        <strong data-region="total">0</strong> {{#str}}responses, mod_pulse{{/str}}
+    <div class="mod-classpulse-summary mb-3">
+        <strong data-region="total">0</strong> {{#str}}responses, mod_classpulse{{/str}}
         <span class="text-muted ms-2" data-region="updated"></span>
     </div>
 
-    <div class="mod-pulse-chart" data-region="chart" aria-live="polite"></div>
-    <div class="mod-pulse-legend mt-3" data-region="legend"></div>
+    <div class="mod-classpulse-chart" data-region="chart" aria-live="polite"></div>
+    <div class="mod-classpulse-legend mt-3" data-region="legend"></div>
 </div>

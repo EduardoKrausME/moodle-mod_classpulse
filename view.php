@@ -17,7 +17,7 @@
 /**
  * view.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,80 +25,80 @@
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
-$cm = get_coursemodule_from_id("pulse", $id, 0, false, MUST_EXIST);
+$cm = get_coursemodule_from_id("classpulse", $id, 0, false, MUST_EXIST);
 $course = get_course($cm->course);
-$pulse = $DB->get_record("pulse", ["id" => $cm->instance], "*", MUST_EXIST);
+$classpulse = $DB->get_record("classpulse", ["id" => $cm->instance], "*", MUST_EXIST);
 
 require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
-require_capability("mod/pulse:view", $context);
+require_capability("mod/classpulse:view", $context);
 
-$PAGE->set_url("/mod/pulse/view.php", ["id" => $cm->id]);
-$PAGE->set_title(format_string($pulse->name));
+$PAGE->set_url("/mod/classpulse/view.php", ["id" => $cm->id]);
+$PAGE->set_title(format_string($classpulse->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($context);
 $PAGE->set_cm($cm, $course);
-$PAGE->set_activity_record($pulse);
+$PAGE->set_activity_record($classpulse);
 
-$event = \mod_pulse\event\course_module_viewed::create([
-    "objectid" => $pulse->id,
+$event = \mod_classpulse\event\course_module_viewed::create([
+    "objectid" => $classpulse->id,
     "context" => $context,
 ]);
 $event->add_record_snapshot("course", $course);
-$event->add_record_snapshot("pulse", $pulse);
+$event->add_record_snapshot("classpulse", $classpulse);
 $event->trigger();
 
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-if (optional_param("submitpulse", 0, PARAM_BOOL)) {
+if (optional_param("submitclasspulse", 0, PARAM_BOOL)) {
     require_sesskey();
-    require_capability("mod/pulse:vote", $context);
+    require_capability("mod/classpulse:vote", $context);
     $response = required_param("response", PARAM_INT);
-    $vote = \mod_pulse\manager::save_vote($pulse, $USER->id, $response);
+    $vote = \mod_classpulse\manager::save_vote($classpulse, $USER->id, $response);
 
-    if (empty($pulse->anonymous)) {
-        $voteevent = \mod_pulse\event\vote_submitted::create([
+    if (empty($classpulse->anonymous)) {
+        $voteevent = \mod_classpulse\event\vote_submitted::create([
             "objectid" => $vote->id,
             "context" => $context,
         ]);
         $voteevent->trigger();
     }
 
-    redirect(new moodle_url("/mod/pulse/view.php", ["id" => $cm->id]), get_string("responsesaved", "mod_pulse"));
+    redirect(new moodle_url("/mod/classpulse/view.php", ["id" => $cm->id]), get_string("responsesaved", "mod_classpulse"));
 }
 
 $currentresponse = null;
-if (has_capability("mod/pulse:vote", $context)) {
-    $currentresponse = \mod_pulse\manager::get_user_response($pulse, $USER->id);
+if (has_capability("mod/classpulse:vote", $context)) {
+    $currentresponse = \mod_classpulse\manager::get_user_response($classpulse, $USER->id);
 }
 
 $options = [];
-foreach (\mod_pulse\manager::get_responses() as $response) {
+foreach (\mod_classpulse\manager::get_responses() as $response) {
     $options[] = [
         "value" => $response,
-        "label" => \mod_pulse\manager::get_response_label($response),
+        "label" => \mod_classpulse\manager::get_response_label($response),
         "selected" => $currentresponse === $response,
     ];
 }
 
 $templatecontext = [
     "cmid" => $cm->id,
-    "formurl" => (new moodle_url("/mod/pulse/view.php", ["id" => $cm->id]))->out(false),
-    "question" => format_string($pulse->question, true, ["context" => $context]),
-    "intro" => format_module_intro("pulse", $pulse, $cm->id),
-    "hasintro" => trim($pulse->intro ?? "") !== "",
-    "canvote" => has_capability("mod/pulse:vote", $context),
-    "canreport" => has_capability("mod/pulse:viewreport", $context),
-    "reporturl" => (new moodle_url("/mod/pulse/report.php", ["id" => $cm->id]))->out(false),
+    "formurl" => (new moodle_url("/mod/classpulse/view.php", ["id" => $cm->id]))->out(false),
+    "question" => format_string($classpulse->question, true, ["context" => $context]),
+    "intro" => format_module_intro("classpulse", $classpulse, $cm->id),
+    "hasintro" => trim($classpulse->intro ?? "") !== "",
+    "canvote" => has_capability("mod/classpulse:vote", $context),
+    "canreport" => has_capability("mod/classpulse:viewreport", $context),
+    "reporturl" => (new moodle_url("/mod/classpulse/report.php", ["id" => $cm->id]))->out(false),
     "sesskey" => sesskey(),
     "options" => $options,
     "hasresponse" => $currentresponse !== null,
-    "allowchange" => !empty($pulse->allowchange),
-    "locked" => $currentresponse !== null && empty($pulse->allowchange),
-    "anonymous" => !empty($pulse->anonymous),
+    "allowchange" => !empty($classpulse->allowchange),
+    "locked" => $currentresponse !== null && empty($classpulse->allowchange),
+    "anonymous" => !empty($classpulse->anonymous),
 ];
 
 echo $OUTPUT->header();
-echo $OUTPUT->render_from_template("mod_pulse/view", $templatecontext);
+echo $OUTPUT->render_from_template("mod_classpulse/view", $templatecontext);
 echo $OUTPUT->footer();

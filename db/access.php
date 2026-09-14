@@ -17,7 +17,7 @@
 /**
  * access.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    "mod/pulse:addinstance" => [
+    "mod/classpulse:addinstance" => [
         "riskbitmask" => RISK_XSS,
         "captype" => "write",
         "contextlevel" => CONTEXT_MODULE,
@@ -35,7 +35,7 @@ $capabilities = [
         ],
         "clonepermissionsfrom" => "moodle/course:manageactivities",
     ],
-    "mod/pulse:view" => [
+    "mod/classpulse:view" => [
         "captype" => "read",
         "contextlevel" => CONTEXT_MODULE,
         "archetypes" => [
@@ -45,14 +45,14 @@ $capabilities = [
             "manager" => CAP_ALLOW,
         ],
     ],
-    "mod/pulse:vote" => [
+    "mod/classpulse:vote" => [
         "captype" => "write",
         "contextlevel" => CONTEXT_MODULE,
         "archetypes" => [
             "student" => CAP_ALLOW,
         ],
     ],
-    "mod/pulse:viewreport" => [
+    "mod/classpulse:viewreport" => [
         "captype" => "read",
         "contextlevel" => CONTEXT_MODULE,
         "archetypes" => [

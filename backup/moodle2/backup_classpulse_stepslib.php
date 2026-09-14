@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * backup_pulse_stepslib.php
+ * backup_classpulse_stepslib.php
  *
- * @package   mod_pulse
+ * @package   mod_classpulse
  * @copyright 2026 Eduardo Kraus {@link https://eduardokraus.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_pulse_activity_structure_step extends backup_activity_structure_step {
+class backup_classpulse_activity_structure_step extends backup_activity_structure_step {
     /**
      * Method define_structure.
      *
@@ -30,7 +30,7 @@ class backup_pulse_activity_structure_step extends backup_activity_structure_ste
     protected function define_structure() {
         $userinfo = $this->get_setting_value("userinfo");
 
-        $pulse = new backup_nested_element("pulse", ["id"], [
+        $classpulse = new backup_nested_element("classpulse", ["id"], [
             "name", "intro", "introformat", "question", "anonymous", "allowchange", "charttype",
             "anonsalt", "timecreated", "timemodified",
         ]);
@@ -39,22 +39,22 @@ class backup_pulse_activity_structure_step extends backup_activity_structure_ste
             "userid", "respondenthash", "response", "timecreated", "timemodified",
         ]);
 
-        $pulse->add_child($votes);
+        $classpulse->add_child($votes);
         $votes->add_child($vote);
 
-        $pulse->set_source_table("pulse", ["id" => backup::VAR_ACTIVITYID]);
+        $classpulse->set_source_table("classpulse", ["id" => backup::VAR_ACTIVITYID]);
         if ($userinfo) {
             $vote->set_source_sql(
                 "SELECT pv.*
-                   FROM {pulse_votes} pv
-                   JOIN {pulse} p ON p.id = pv.pulseid
-                  WHERE pv.pulseid = ? AND p.anonymous = 0",
+                   FROM {classpulse_votes} pv
+                   JOIN {classpulse} p ON p.id = pv.classpulseid
+                  WHERE pv.classpulseid = ? AND p.anonymous = 0",
                 [backup::VAR_PARENTID]
             );
             $vote->annotate_ids("user", "userid");
         }
 
-        $pulse->annotate_files("mod_pulse", "intro", null);
-        return $this->prepare_activity_structure($pulse);
+        $classpulse->annotate_files("mod_classpulse", "intro", null);
+        return $this->prepare_activity_structure($classpulse);
     }
 }

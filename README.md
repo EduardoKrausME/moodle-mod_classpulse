@@ -1,4 +1,4 @@
-# mod_pulse - Pulso da turma
+# mod_classpulse - Pulso da turma
 
 Atividade Moodle para coletar um sinal rápido de compreensão durante a aula.
 
@@ -13,7 +13,7 @@ O professor pode configurar a pergunta, permitir ou bloquear alteração da resp
 
 ## Privacidade do modo anônimo
 
-Quando o modo anônimo está ativo, `pulse_votes.userid` é gravado como `0`. Para impedir múltiplas respostas do mesmo usuário, é salvo um HMAC SHA-256 específico daquela atividade em `respondenthash`. O painel do professor nunca recebe esse identificador e trabalha somente com contagens agregadas.
+Quando o modo anônimo está ativo, `classpulse_votes.userid` é gravado como `0`. Para impedir múltiplas respostas do mesmo usuário, é salvo um HMAC SHA-256 específico daquela atividade em `respondenthash`. O painel do professor nunca recebe esse identificador e trabalha somente com contagens agregadas.
 
 Esse mecanismo oferece anonimato na interface e no relatório docente, mas deve ser entendido como pseudonimização perante administradores com acesso privilegiado ao banco de dados e ao código do site.
 
