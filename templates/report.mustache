@@ -1,0 +1,50 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_pulse/report
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+<div class="mod-pulse-report" data-region="pulse-dashboard" data-cmid="{{cmid}}" data-default-chart="{{defaultchart}}">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+        <div>
+            <h2 class="mb-1">{{question}}</h2>
+            <div class="text-muted">
+                {{#anonymous}}{{#str}}anonymousreportnotice, mod_pulse{{/str}}{{/anonymous}}
+                {{^anonymous}}{{#str}}identifiedreportnotice, mod_pulse{{/str}}{{/anonymous}}
+            </div>
+        </div>
+        <a class="btn btn-secondary" href="{{backurl}}">{{#str}}backtoactivity, mod_pulse{{/str}}</a>
+    </div>
+
+    <div class="mod-pulse-toolbar mb-3" role="group" aria-label="{{#str}}charttype, mod_pulse{{/str}}">
+        <button type="button" class="btn btn-outline-secondary" data-chart="pie">{{#str}}chartpie, mod_pulse{{/str}}</button>
+        <button type="button" class="btn btn-outline-secondary" data-chart="bar">{{#str}}chartbar, mod_pulse{{/str}}</button>
+        <button type="button" class="btn btn-outline-secondary" data-chart="line">{{#str}}chartline, mod_pulse{{/str}}</button>
+    </div>
+
+    <div class="mod-pulse-summary mb-3">
+        <strong data-region="total">0</strong> {{#str}}responses, mod_pulse{{/str}}
+        <span class="text-muted ms-2" data-region="updated"></span>
+    </div>
+
+    <div class="mod-pulse-chart" data-region="chart" aria-live="polite"></div>
+    <div class="mod-pulse-legend mt-3" data-region="legend"></div>
+</div>
