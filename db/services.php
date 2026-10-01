@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 $functions = [
     "mod_classpulse_get_results" => [
         "classname" => "mod_classpulse\\external\\get_results",
+        "methodname" => "execute",
         "description" => "Get the aggregated classpulse distribution.",
         "type" => "read",
         "ajax" => true,
