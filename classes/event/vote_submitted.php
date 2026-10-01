@@ -24,10 +24,13 @@
 
 namespace mod_classpulse\event;
 
+use core\event\base;
+use moodle_url;
+
 /**
  * Class vote_submitted.
  */
-class vote_submitted extends \core\event\base {
+class vote_submitted extends base {
     /**
      * Method init.
      *
@@ -61,10 +64,10 @@ class vote_submitted extends \core\event\base {
     /**
      * Method get_url.
      *
-     * @return \moodle_url Return value.
+     * @return moodle_url Return value.
      */
-    public function get_url(): \moodle_url {
-        return new \moodle_url("/mod/classpulse/view.php", ["id" => $this->contextinstanceid]);
+    public function get_url(): moodle_url {
+        return new moodle_url("/mod/classpulse/view.php", ["id" => $this->contextinstanceid]);
     }
 
     /**

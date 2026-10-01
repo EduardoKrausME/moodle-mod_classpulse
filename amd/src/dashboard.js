@@ -21,20 +21,20 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notification) {
+define(["jquery", "core/ajax", "core/notification"], function ($, Ajax, Notification) {
     "use strict";
 
     const COLORS = ["#d9534f", "#f0ad4e", "#5bc0de", "#5cb85c"];
     let currentChart = "bar";
     let latestData = null;
 
-    const escapeHtml = function(value) {
+    const escapeHtml = function (value) {
         return $("<div>").text(value).html();
     };
 
-    const renderLegend = function(root, items) {
+    const renderLegend = function (root, items) {
         const legend = root.find('[data-region="legend"]');
-        const html = items.map(function(item, index) {
+        const html = items.map(function (item, index) {
             return '<div class="mod-classpulse-legend-item">' +
                 '<span class="mod-classpulse-swatch" style="background:' + COLORS[index] + '"></span>' +
                 '<span class="mod-classpulse-legend-label">' + escapeHtml(item.label) + '</span>' +
@@ -45,9 +45,11 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         legend.html(html);
     };
 
-    const renderBar = function(root, items) {
-        const max = Math.max.apply(null, items.map(function(item) { return item.count; }).concat([1]));
-        const html = '<div class="mod-classpulse-bars">' + items.map(function(item, index) {
+    const renderBar = function (root, items) {
+        const max = Math.max.apply(null, items.map(function (item) {
+            return item.count;
+        }).concat([1]));
+        const html = '<div class="mod-classpulse-bars">' + items.map(function (item, index) {
             const height = Math.max((item.count / max) * 100, item.count > 0 ? 4 : 0);
             return '<div class="mod-classpulse-bar-column">' +
                 '<div class="mod-classpulse-bar-value">' + item.count + '</div>' +
@@ -58,7 +60,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         root.find('[data-region="chart"]').html(html);
     };
 
-    const renderPie = function(root, items, total) {
+    const renderPie = function (root, items, total) {
         const chart = root.find('[data-region="chart"]');
         if (total === 0) {
             chart.html('<div class="mod-classpulse-empty">0</div>');
@@ -69,7 +71,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         const cx = 120;
         const cy = 120;
         const radius = 95;
-        const paths = items.map(function(item, index) {
+        const paths = items.map(function (item, index) {
             const fraction = item.count / total;
             const end = start + (fraction * Math.PI * 2);
             if (fraction === 0) {
@@ -96,21 +98,25 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
             '</svg></div>');
     };
 
-    const renderLine = function(root, items) {
-        const max = Math.max.apply(null, items.map(function(item) { return item.count; }).concat([1]));
+    const renderLine = function (root, items) {
+        const max = Math.max.apply(null, items.map(function (item) {
+            return item.count;
+        }).concat([1]));
         const width = 640;
         const height = 280;
         const paddingX = 60;
         const paddingY = 35;
         const usableWidth = width - paddingX * 2;
         const usableHeight = height - paddingY * 2 - 35;
-        const points = items.map(function(item, index) {
+        const points = items.map(function (item, index) {
             const x = paddingX + (usableWidth / (items.length - 1)) * index;
             const y = paddingY + usableHeight - (item.count / max) * usableHeight;
             return {x: x, y: y, item: item, index: index};
         });
-        const polyline = points.map(function(point) { return point.x + ',' + point.y; }).join(' ');
-        const circles = points.map(function(point) {
+        const polyline = points.map(function (point) {
+            return point.x + ',' + point.y;
+        }).join(' ');
+        const circles = points.map(function (point) {
             return '<circle cx="' + point.x + '" cy="' + point.y + '" r="6" fill="' + COLORS[point.index] + '"></circle>' +
                 '<text x="' + point.x + '" y="' + (point.y - 12) + '" text-anchor="middle" class="mod-classpulse-line-value">' + point.item.count + '</text>' +
                 '<text x="' + point.x + '" y="' + (height - 12) + '" text-anchor="middle" class="mod-classpulse-line-label">' + escapeHtml(point.item.shortlabel) + '</text>';
@@ -121,7 +127,7 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         root.find('[data-region="chart"]').html(svg);
     };
 
-    const render = function(root, data) {
+    const render = function (root, data) {
         root.find('[data-region="total"]').text(data.total);
         root.find('[data-region="updated"]').text(data.updated);
         renderLegend(root, data.items);
@@ -138,31 +144,31 @@ define(["jquery", "core/ajax", "core/notification"], function($, Ajax, Notificat
         root.find('[data-chart="' + currentChart + '"]').addClass('active').attr('aria-pressed', 'true');
     };
 
-    const load = function(root) {
+    const load = function (root) {
         const cmid = parseInt(root.data("cmid"), 10);
         Ajax.call([{
             methodname: "mod_classpulse_get_results",
             args: {cmid: cmid},
-        }])[0].done(function(data) {
+        }])[0].done(function (data) {
             latestData = data;
             render(root, data);
         }).fail(Notification.exception);
     };
 
-    const init = function() {
+    const init = function () {
         const root = $('[data-region="classpulse-dashboard"]');
         if (!root.length) {
             return;
         }
         currentChart = root.data("default-chart") || "bar";
-        root.on("click", "[data-chart]", function() {
+        root.on("click", "[data-chart]", function () {
             currentChart = $(this).data("chart");
             if (latestData) {
                 render(root, latestData);
             }
         });
         load(root);
-        window.setInterval(function() {
+        window.setInterval(function () {
             if (document.visibilityState === "visible") {
                 load(root);
             }

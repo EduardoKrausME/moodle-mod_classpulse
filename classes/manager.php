@@ -53,7 +53,7 @@ class manager {
     public static function add_instance(stdClass $data): int {
         global $DB;
 
-        self::validate_chart_type((string) $data->charttype);
+        self::validate_chart_type((string)$data->charttype);
         $now = time();
         $data->timecreated = $now;
         $data->timemodified = $now;
@@ -72,12 +72,12 @@ class manager {
         global $DB;
 
         $current = $DB->get_record("classpulse", ["id" => $data->instance], "id, anonymous", MUST_EXIST);
-        if ((int) $current->anonymous !== (int) $data->anonymous &&
-                $DB->record_exists("classpulse_votes", ["classpulseid" => $data->instance])) {
+        if ((int)$current->anonymous !== (int)$data->anonymous &&
+            $DB->record_exists("classpulse_votes", ["classpulseid" => $data->instance])) {
             throw new moodle_exception("anonymousmodecannotchange", "mod_classpulse");
         }
 
-        self::validate_chart_type((string) $data->charttype);
+        self::validate_chart_type((string)$data->charttype);
         $data->id = $data->instance;
         $data->timemodified = time();
         unset($data->instance);
@@ -134,7 +134,7 @@ class manager {
             return $existing;
         }
 
-        $vote = (object) [
+        $vote = (object)[
             "classpulseid" => $classpulse->id,
             "userid" => empty($classpulse->anonymous) ? $userid : 0,
             "respondenthash" => $respondenthash,
@@ -163,7 +163,7 @@ class manager {
             "respondenthash" => $respondenthash,
         ]);
 
-        return $response === false ? null : (int) $response;
+        return $response === false ? null : (int)$response;
     }
 
     /**
@@ -181,8 +181,8 @@ class manager {
                  WHERE classpulseid = :classpulseid
               GROUP BY response";
         foreach ($DB->get_records_sql($sql, ["classpulseid" => $classpulseid]) as $record) {
-            if (array_key_exists((int) $record->response, $counts)) {
-                $counts[(int) $record->response] = (int) $record->total;
+            if (array_key_exists((int)$record->response, $counts)) {
+                $counts[(int)$record->response] = (int)$record->total;
             }
         }
 
@@ -287,6 +287,6 @@ class manager {
             throw new moodle_exception("missinganonsalt", "mod_classpulse");
         }
 
-        return hash_hmac("sha256", (string) $userid, $classpulse->anonsalt);
+        return hash_hmac("sha256", (string)$userid, $classpulse->anonsalt);
     }
 }

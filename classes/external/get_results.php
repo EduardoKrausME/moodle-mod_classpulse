@@ -24,6 +24,7 @@
 
 namespace mod_classpulse\external;
 
+use context_module;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_multiple_structure;
@@ -57,7 +58,7 @@ class get_results extends external_api {
 
         ["cmid" => $cmid] = self::validate_parameters(self::execute_parameters(), ["cmid" => $cmid]);
         $cm = get_coursemodule_from_id("classpulse", $cmid, 0, false, MUST_EXIST);
-        $context = \context_module::instance($cm->id);
+        $context = context_module::instance($cm->id);
         self::validate_context($context);
         require_capability("mod/classpulse:viewreport", $context);
 

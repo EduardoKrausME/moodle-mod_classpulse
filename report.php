@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_classpulse\event\report_viewed;
+
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
@@ -41,7 +43,7 @@ $PAGE->set_cm($cm, $course);
 $PAGE->set_activity_record($classpulse);
 $PAGE->requires->js_call_amd("mod_classpulse/dashboard", "init");
 
-$event = \mod_classpulse\event\report_viewed::create([
+$event = report_viewed::create([
     "objectid" => $classpulse->id,
     "context" => $context,
 ]);

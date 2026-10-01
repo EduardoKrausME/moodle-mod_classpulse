@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_classpulse\manager;
+
 /**
  * Declare supported Moodle features.
  *
@@ -47,7 +49,7 @@ function classpulse_supports($feature) {
  * @return int
  */
 function classpulse_add_instance($data, $mform = null): int {
-    return \mod_classpulse\manager::add_instance($data);
+    return manager::add_instance($data);
 }
 
 /**
@@ -58,7 +60,7 @@ function classpulse_add_instance($data, $mform = null): int {
  * @return bool
  */
 function classpulse_update_instance($data, $mform = null): bool {
-    return \mod_classpulse\manager::update_instance($data);
+    return manager::update_instance($data);
 }
 
 /**
@@ -68,5 +70,5 @@ function classpulse_update_instance($data, $mform = null): bool {
  * @return bool
  */
 function classpulse_delete_instance($id): bool {
-    return \mod_classpulse\manager::delete_instance($id);
+    return manager::delete_instance($id);
 }

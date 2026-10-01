@@ -45,7 +45,7 @@ class restore_classpulse_activity_structure_step extends restore_activity_struct
     protected function process_classpulse($data): void {
         global $DB;
 
-        $data = (object) $data;
+        $data = (object)$data;
         $data->course = $this->get_courseid();
         $data->anonsalt = bin2hex(random_bytes(32));
         $newitemid = $DB->insert_record("classpulse", $data);
@@ -61,15 +61,15 @@ class restore_classpulse_activity_structure_step extends restore_activity_struct
     protected function process_classpulse_vote($data): void {
         global $DB;
 
-        $data = (object) $data;
+        $data = (object)$data;
         $data->classpulseid = $this->get_new_parentid("classpulse");
-        $olduserid = (int) $data->userid;
+        $olduserid = (int)$data->userid;
         $data->userid = $this->get_mappingid("user", $olduserid);
         if (empty($data->userid)) {
             return;
         }
         $classpulse = $DB->get_record("classpulse", ["id" => $data->classpulseid], "id, anonsalt", MUST_EXIST);
-        $data->respondenthash = hash_hmac("sha256", (string) $data->userid, $classpulse->anonsalt);
+        $data->respondenthash = hash_hmac("sha256", (string)$data->userid, $classpulse->anonsalt);
         $newitemid = $DB->insert_record("classpulse_votes", $data);
         $this->set_mapping("classpulse_vote", $data->id, $newitemid);
     }

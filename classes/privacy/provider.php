@@ -24,6 +24,8 @@
 
 namespace mod_classpulse\privacy;
 
+use context;
+use context_module;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\contextlist;
@@ -34,8 +36,8 @@ use core_privacy\local\request\writer;
  * Class provider.
  */
 class provider implements
-        \core_privacy\local\metadata\provider,
-        \core_privacy\local\request\plugin\provider {
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\plugin\provider {
 
     /**
      * Method get_metadata.
@@ -67,12 +69,12 @@ class provider implements
         $anonymousclasspulseids = [];
         $classpulses = $DB->get_records("classpulse", ["anonymous" => 1], "", "id, anonsalt");
         foreach ($classpulses as $classpulse) {
-            $respondenthash = hash_hmac("sha256", (string) $userid, $classpulse->anonsalt);
+            $respondenthash = hash_hmac("sha256", (string)$userid, $classpulse->anonsalt);
             if ($DB->record_exists("classpulse_votes", [
                 "classpulseid" => $classpulse->id,
                 "respondenthash" => $respondenthash,
             ])) {
-                $anonymousclasspulseids[] = (int) $classpulse->id;
+                $anonymousclasspulseids[] = (int)$classpulse->id;
             }
         }
 
@@ -117,7 +119,7 @@ class provider implements
             $cm = get_coursemodule_from_id("classpulse", $context->instanceid, 0, false, MUST_EXIST);
             $classpulse = $DB->get_record("classpulse", ["id" => $cm->instance], "id, anonymous, anonsalt", MUST_EXIST);
             if (!empty($classpulse->anonymous)) {
-                $respondenthash = hash_hmac("sha256", (string) $userid, $classpulse->anonsalt);
+                $respondenthash = hash_hmac("sha256", (string)$userid, $classpulse->anonsalt);
                 $vote = $DB->get_record("classpulse_votes", [
                     "classpulseid" => $classpulse->id,
                     "respondenthash" => $respondenthash,
@@ -128,7 +130,7 @@ class provider implements
             if (!$vote) {
                 continue;
             }
-            $data = (object) [
+            $data = (object)[
                 "response" => $vote->response,
                 "timecreated" => transform::datetime($vote->timecreated),
                 "timemodified" => transform::datetime($vote->timemodified),
@@ -140,13 +142,13 @@ class provider implements
     /**
      * Method delete_data_for_all_users_in_context.
      *
-     * @param \context $context Parameter context.
+     * @param context $context Parameter context.
      * @return void Return value.
      */
-    public static function delete_data_for_all_users_in_context(\context $context): void {
+    public static function delete_data_for_all_users_in_context(context $context): void {
         global $DB;
 
-        if (!$context instanceof \context_module) {
+        if (!$context instanceof context_module) {
             return;
         }
         $cm = get_coursemodule_from_id("classpulse", $context->instanceid, 0, false, IGNORE_MISSING);
@@ -166,14 +168,14 @@ class provider implements
 
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
-            if (!$context instanceof \context_module) {
+            if (!$context instanceof context_module) {
                 continue;
             }
             $cm = get_coursemodule_from_id("classpulse", $context->instanceid, 0, false, IGNORE_MISSING);
             if ($cm) {
                 $classpulse = $DB->get_record("classpulse", ["id" => $cm->instance], "id, anonymous, anonsalt", MUST_EXIST);
                 if (!empty($classpulse->anonymous)) {
-                    $respondenthash = hash_hmac("sha256", (string) $userid, $classpulse->anonsalt);
+                    $respondenthash = hash_hmac("sha256", (string)$userid, $classpulse->anonsalt);
                     $DB->delete_records("classpulse_votes", [
                         "classpulseid" => $classpulse->id,
                         "respondenthash" => $respondenthash,

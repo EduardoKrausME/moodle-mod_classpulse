@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_classpulse\event\course_module_viewed;
+use mod_classpulse\event\vote_submitted;
+use mod_classpulse\manager;
+
 require_once(__DIR__ . "/../../config.php");
 
 $id = required_param("id", PARAM_INT);
@@ -40,7 +44,7 @@ $PAGE->set_context($context);
 $PAGE->set_cm($cm, $course);
 $PAGE->set_activity_record($classpulse);
 
-$event = \mod_classpulse\event\course_module_viewed::create([
+$event = course_module_viewed::create([
     "objectid" => $classpulse->id,
     "context" => $context,
 ]);
@@ -55,10 +59,10 @@ if (optional_param("submitclasspulse", 0, PARAM_BOOL)) {
     require_sesskey();
     require_capability("mod/classpulse:vote", $context);
     $response = required_param("response", PARAM_INT);
-    $vote = \mod_classpulse\manager::save_vote($classpulse, $USER->id, $response);
+    $vote = manager::save_vote($classpulse, $USER->id, $response);
 
     if (empty($classpulse->anonymous)) {
-        $voteevent = \mod_classpulse\event\vote_submitted::create([
+        $voteevent = vote_submitted::create([
             "objectid" => $vote->id,
             "context" => $context,
         ]);
@@ -70,14 +74,14 @@ if (optional_param("submitclasspulse", 0, PARAM_BOOL)) {
 
 $currentresponse = null;
 if (has_capability("mod/classpulse:vote", $context)) {
-    $currentresponse = \mod_classpulse\manager::get_user_response($classpulse, $USER->id);
+    $currentresponse = manager::get_user_response($classpulse, $USER->id);
 }
 
 $options = [];
-foreach (\mod_classpulse\manager::get_responses() as $response) {
+foreach (manager::get_responses() as $response) {
     $options[] = [
         "value" => $response,
-        "label" => \mod_classpulse\manager::get_response_label($response),
+        "label" => manager::get_response_label($response),
         "selected" => $currentresponse === $response,
     ];
 }

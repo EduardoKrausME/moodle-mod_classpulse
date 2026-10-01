@@ -42,7 +42,9 @@
                 <div class="mod-classpulse-options" role="radiogroup" aria-label="{{question}}">
                     {{#options}}
                         <label class="mod-classpulse-option {{#selected}}is-selected{{/selected}} {{#locked}}is-locked{{/locked}}">
-                            <input type="radio" name="response" value="{{value}}" {{#selected}}checked{{/selected}} {{#locked}}disabled{{/locked}} required>
+                            <input type="radio" name="response"
+                                   value="{{value}}" {{#selected}}checked{{/selected}} {{#locked}}disabled{{/locked}}
+                                   required>
                             <span class="mod-classpulse-option-label">{{label}}</span>
                         </label>
                     {{/options}}
@@ -58,7 +60,8 @@
                 {{/hasresponse}}
 
                 {{^locked}}
-                    <button type="submit" class="btn btn-primary mt-3">{{#str}}sendresponse, mod_classpulse{{/str}}</button>
+                    <button type="submit" class="btn btn-primary mt-3">{{#str}}
+                        sendresponse, mod_classpulse{{/str}}</button>
                 {{/locked}}
             </form>
         {{/canvote}}
