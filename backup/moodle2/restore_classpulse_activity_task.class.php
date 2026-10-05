@@ -53,7 +53,9 @@ class restore_classpulse_activity_task extends restore_activity_task {
      * @return mixed Return value.
      */
     public static function define_decode_contents() {
-        return [];
+        return [
+            new restore_decode_content("classpulse", ["intro"], "classpulse"),
+        ];
     }
 
     /**
@@ -62,7 +64,10 @@ class restore_classpulse_activity_task extends restore_activity_task {
      * @return mixed Return value.
      */
     public static function define_decode_rules() {
-        return [];
+        return [
+            new restore_decode_rule("CLASSPULSEINDEX", "/mod/classpulse/index.php?id=$1", "course"),
+            new restore_decode_rule("CLASSPULSEVIEWBYID", "/mod/classpulse/view.php?id=$1", "course_module"),
+        ];
     }
     /**
      * Defines restore log rules.
