@@ -1,29 +1,24 @@
-# mod_classpulse - Pulso da turma
+# mod_classpulse - Class pulse
 
-Atividade Moodle para coletar um sinal rápido de compreensão durante a aula.
+Moodle activity for collecting a quick signal of learner understanding during a class.
 
-As opções padrão são:
+The default response options are:
 
-- 😕 Não entendi;
-- 😐 Mais ou menos;
-- 🙂 Entendi;
-- 😄 Domino.
+- 😕 I did not understand;
+- 😐 More or less;
+- 🙂 I understand;
+- 😄 I master it.
 
-O professor pode configurar a pergunta, permitir ou bloquear alteração da resposta, ativar modo anônimo e escolher o
-gráfico padrão do relatório. O relatório agregado atualiza automaticamente enquanto está aberto e permite alternar entre
-pizza, barras e linha.
+Teachers can configure the question, allow or prevent learners from changing their response, enable anonymous mode, and choose the default chart used by the report. The aggregate report refreshes automatically while it is open and can be switched between pie, bar, and line charts.
 
-## Privacidade do modo anônimo
+## Anonymous mode privacy
 
-Quando o modo anônimo está ativo, `classpulse_votes.userid` é gravado como `0`. Para impedir múltiplas respostas do
-mesmo usuário, é salvo um HMAC SHA-256 específico daquela atividade em `respondenthash`. O painel do professor nunca
-recebe esse identificador e trabalha somente com contagens agregadas.
+When anonymous mode is enabled, `classpulse_votes.userid` is stored as `0`. To prevent multiple responses from the same user, the activity stores an activity-specific HMAC SHA-256 value in `respondenthash`. The teacher dashboard never receives this identifier and works only with aggregate counts.
 
-Esse mecanismo mantém o anonimato na interface e no relatório docente, embora administradores com acesso privilegiado
-ao banco de dados e ao código possam tratar o identificador como pseudônimo técnico.
+This mechanism keeps the learner identity hidden from the teacher interface and aggregate report. Site administrators with privileged database and source-code access should still treat the identifier as a technical pseudonym rather than absolute cryptographic anonymity.
 
-## Backup e restauração
+## Backup and restore
 
-A configuração da atividade é incluída no backup. Respostas identificadas são restauradas quando os respectivos usuários
-também são restaurados. Em atividades anônimas, as respostas não são levadas no backup de dados de usuários, evitando
-registros órfãos ou duplicados quando identificadores mudam entre ambientes.
+Activity configuration is included in backups. Identified responses are restored when the corresponding users are also restored. For anonymous activities, responses are not included in user-data backups, which avoids orphaned or duplicated records when identifiers change between environments.
+
+A Portuguese version of this document is available in [README.pt_br.md](README.pt_br.md).
