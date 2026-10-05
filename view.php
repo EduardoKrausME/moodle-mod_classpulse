@@ -44,17 +44,6 @@ $PAGE->set_context($context);
 $PAGE->set_cm($cm, $course);
 $PAGE->set_activity_record($classpulse);
 
-$event = course_module_viewed::create([
-    "objectid" => $classpulse->id,
-    "context" => $context,
-]);
-$event->add_record_snapshot("course", $course);
-$event->add_record_snapshot("classpulse", $classpulse);
-$event->trigger();
-
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
-
 if (optional_param("submitclasspulse", 0, PARAM_BOOL)) {
     require_sesskey();
     require_capability("mod/classpulse:vote", $context);
@@ -71,6 +60,18 @@ if (optional_param("submitclasspulse", 0, PARAM_BOOL)) {
 
     redirect(new moodle_url("/mod/classpulse/view.php", ["id" => $cm->id]), get_string("responsesaved", "mod_classpulse"));
 }
+
+$event = course_module_viewed::create([
+    "objectid" => $classpulse->id,
+    "context" => $context,
+    "anonymous" => !empty($classpulse->anonymous),
+]);
+$event->add_record_snapshot("course", $course);
+$event->add_record_snapshot("classpulse", $classpulse);
+$event->trigger();
+
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
 
 $currentresponse = null;
 if (has_capability("mod/classpulse:vote", $context)) {
