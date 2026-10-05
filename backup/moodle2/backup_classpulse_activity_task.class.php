@@ -54,6 +54,20 @@ class backup_classpulse_activity_task extends backup_activity_task {
      * @return mixed Return value.
      */
     public static function encode_content_links($content) {
+        global $CFG;
+
+        $base = preg_quote($CFG->wwwroot . "/mod/classpulse", "#");
+
+        $pattern = "#(" . $base . "/index\\.php\\?id=)([0-9]+)#";
+        $content = preg_replace($pattern, '$@CLASSPULSEINDEX*$2@
+}
+, $content);
+
+        $pattern = "#(" . $base . "/view\\.php\\?id=)([0-9]+)#";
+        $content = preg_replace($pattern, '$@CLASSPULSEVIEWBYID*$2@
+}
+, $content);
+
         return $content;
     }
 }
