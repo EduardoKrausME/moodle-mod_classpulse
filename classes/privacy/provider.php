@@ -28,8 +28,10 @@ use context;
 use context_module;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\transform;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 /**
@@ -37,6 +39,7 @@ use core_privacy\local\request\writer;
  */
 class provider implements
     \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider,
     \core_privacy\local\request\plugin\provider {
 
     /**
@@ -99,6 +102,73 @@ class provider implements
                  WHERE pv.id IS NOT NULL OR {$anonymouscondition}";
         $contextlist->add_from_sql($sql, $params);
         return $contextlist;
+    }
+
+    /**
+     * Get users who have data in one Class pulse context.
+     *
+     * Anonymous votes cannot be reversed from their HMAC, so candidate user IDs
+     * are hashed with the activity salt and compared with stored respondent hashes.
+     *
+     * @param userlist $userlist User list for the context.
+     * @return void
+     */
+    public static function get_users_in_context(userlist $userlist): void {
+        global $DB;
+
+        $context = $userlist->get_context();
+        if (!$context instanceof context_module) {
+            return;
+        }
+
+        $cm = get_coursemodule_from_id("classpulse", $context->instanceid, 0, false, IGNORE_MISSING);
+        if (!$cm) {
+            return;
+        }
+
+        $classpulse = $DB->get_record(
+            "classpulse",
+            ["id" => $cm->instance],
+            "id, anonymous, anonsalt",
+            IGNORE_MISSING
+        );
+        if (!$classpulse) {
+            return;
+        }
+
+        if (empty($classpulse->anonymous)) {
+            $sql = "SELECT userid
+                      FROM {classpulse_votes}
+                     WHERE classpulseid = :classpulseid
+                       AND userid > 0";
+            $userlist->add_from_sql("userid", $sql, ["classpulseid" => $classpulse->id]);
+            return;
+        }
+
+        $hashes = $DB->get_fieldset_select(
+            "classpulse_votes",
+            "respondenthash",
+            "classpulseid = :classpulseid",
+            ["classpulseid" => $classpulse->id]
+        );
+        if (!$hashes) {
+            return;
+        }
+
+        $hashlookup = array_fill_keys($hashes, true);
+        $matcheduserids = [];
+        $users = $DB->get_recordset_select("user", "id > 0", [], "", "id");
+        foreach ($users as $user) {
+            $respondenthash = hash_hmac("sha256", (string)$user->id, $classpulse->anonsalt);
+            if (isset($hashlookup[$respondenthash])) {
+                $matcheduserids[] = (int)$user->id;
+            }
+        }
+        $users->close();
+
+        if ($matcheduserids) {
+            $userlist->add_users($matcheduserids);
+        }
     }
 
     /**
@@ -186,4 +256,58 @@ class provider implements
             }
         }
     }
+    /**
+     * Delete data for a set of users in one context.
+     *
+     * @param approved_userlist $userlist Approved users and context.
+     * @return void
+     */
+    public static function delete_data_for_users(approved_userlist $userlist): void {
+        global $DB;
+
+        $context = $userlist->get_context();
+        $userids = $userlist->get_userids();
+        if (!$context instanceof context_module || !$userids) {
+            return;
+        }
+
+        $cm = get_coursemodule_from_id("classpulse", $context->instanceid, 0, false, IGNORE_MISSING);
+        if (!$cm) {
+            return;
+        }
+
+        $classpulse = $DB->get_record(
+            "classpulse",
+            ["id" => $cm->instance],
+            "id, anonymous, anonsalt",
+            IGNORE_MISSING
+        );
+        if (!$classpulse) {
+            return;
+        }
+
+        if (!empty($classpulse->anonymous)) {
+            $hashes = [];
+            foreach ($userids as $userid) {
+                $hashes[] = hash_hmac("sha256", (string)$userid, $classpulse->anonsalt);
+            }
+            [$hashsql, $hashparams] = $DB->get_in_or_equal($hashes, SQL_PARAMS_NAMED, "respondenthash");
+            $params = ["classpulseid" => $classpulse->id] + $hashparams;
+            $DB->delete_records_select(
+                "classpulse_votes",
+                "classpulseid = :classpulseid AND respondenthash {$hashsql}",
+                $params
+            );
+            return;
+        }
+
+        [$usersql, $userparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, "userid");
+        $params = ["classpulseid" => $classpulse->id] + $userparams;
+        $DB->delete_records_select(
+            "classpulse_votes",
+            "classpulseid = :classpulseid AND userid {$usersql}",
+            $params
+        );
+    }
+
 }
