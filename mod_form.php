@@ -67,4 +67,30 @@ class mod_classpulse_mod_form extends moodleform_mod {
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
     }
+
+    /**
+     * Validate activity settings.
+     *
+     * @param array $data Submitted form data.
+     * @param array $files Submitted files.
+     * @return array Validation errors.
+     */
+    public function validation($data, $files): array {
+        global $DB;
+
+        $errors = parent::validation($data, $files);
+        $instanceid = (int)($data["instance"] ?? 0);
+        if (!$instanceid) {
+            return $errors;
+        }
+
+        $current = $DB->get_record("classpulse", ["id" => $instanceid], "id, anonymous");
+        if ($current &&
+            (int)$current->anonymous !== (int)($data["anonymous"] ?? 0) &&
+            $DB->record_exists("classpulse_votes", ["classpulseid" => $instanceid])) {
+            $errors["anonymous"] = get_string("anonymousmodecannotchange", "mod_classpulse");
+        }
+
+        return $errors;
+    }
 }
